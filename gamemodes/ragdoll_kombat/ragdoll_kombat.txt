@@ -1,7 +1,7 @@
-"ragdoll_combat"
+"ragdoll_kombat"
 {
 	"base"		"base"
-	"title"		"Ragdoll Combat"
+	"title"		"Ragdoll Kombat"
 	"maps"		"^ragcom_"
 	"menusystem"	"1"
 	"settings"
