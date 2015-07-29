@@ -5,8 +5,7 @@ ENT.Type   = "anim"
 local energy_fall = 5
 
 ENT.MaxEnergy = 60
-
-//ENT.RenderGroup = RENDERGROUP_TRANSLUCENT
+-- ENT.RenderGroup = RENDERGROUP_TRANSLUCENT
 
 function ENT:SetupDataTables()
 	self:NetworkVar("Entity",0,"Ragdoll")
@@ -21,10 +20,10 @@ local SIDE_LEFT = true
 local SIDE_RIGHT = false
 
 local step_time = .33
-local stride_length = 60 //60
+local stride_length = 60 -- 60
 local stride_height = 25
 
-function ENT:Initialize()		
+function ENT:Initialize()
 	if SERVER then
 		self:SetModel("models/props_c17/computer01_keyboard.mdl")
 
@@ -36,33 +35,33 @@ function ENT:Initialize()
 
 		ragdoll:SetFlexWeight(0,1)
 		ragdoll:SetFlexWeight(1,1)
-		
+
 
 		self:DeleteOnRemove(ragdoll)
 
 		RAGCOM_CHARS[self:GetChar()].setup(ragdoll)
 
-		/*for i=1,100 do
-			print(i,ragdoll:GetBoneName(i),ragdoll:TranslateBoneToPhysBone(i))
-		end*/
+--		for i=1,100 do
+--			print(i,ragdoll:GetBoneName(i),ragdoll:TranslateBoneToPhysBone(i))
+--		end
 
 		for i=26,55 do
-			if (i-26)%15>11 then //Thumbs
+			if (i-26)%15>11 then -- Thumbs
 				ragdoll:ManipulateBoneAngles(i,Angle(0,30,0))
 			else
 				ragdoll:ManipulateBoneAngles(i,Angle(0,-30,0))
 			end
 		end
- 
 
-		/*self.step_timer = 0
-		self.step_cycle = 0
 
-		self.step_base = Vector(5,1000,-145)
-
-		self.step_alt = Vector(-5,1000,-145)
-
-		self.step_goal = self.step_base*/
+--		self.step_timer = 0
+--		self.step_cycle = 0
+--
+--		self.step_base = Vector(5,1000,-145)
+--
+--		self.step_alt = Vector(-5,1000,-145)
+--
+--		self.step_goal = self.step_base
 
 		self.type_sound = CreateSound(self,"ambient/machines/keyboard_fast1_1second.wav")
 
@@ -89,20 +88,20 @@ function ENT:Initialize()
 		self.yaw=ply:EyeAngles()
 		self.yaw.p = 0
 
-		
-		//ply:SetViewEntity(self)
+
+--		ply:SetViewEntity(self)
 		ply.controller = self
-		
+
 		self:StartMotionController()
 		self:AddToMotionController(ragdoll:GetPhysicsObject())
 
 		self:SetParent(ragdoll)
-		//self:SetPos(ragdoll:GetBonePosition(1)+Vector(0,0,0))
-		//self:FollowBone(ragdoll,1)
+--		self:SetPos(ragdoll:GetBonePosition(1)+Vector(0,0,0))
+--		self:FollowBone(ragdoll,1)
 		self:SetLocalPos(Vector())
 
-		/*self:SetColor(Color(0,0,0,0))
-		self:SetRenderMode(RENDERMODE_TRANSALPHA)*/
+--		self:SetColor(Color(0,0,0,0))
+--		self:SetRenderMode(RENDERMODE_TRANSALPHA)
 		self:DrawShadow(false)
 
 		for i=1, ragdoll:GetPhysicsObjectCount() do
@@ -117,24 +116,24 @@ function ENT:Initialize()
 
 		ragdoll:AddCallback("PhysicsCollide",function(ragdoll,data) self:RagdollCollide(ragdoll,data) end)
 
-		//base steps
+--		base steps
 		local control = Vector()
 
 		self:StepStart(SIDE_LEFT,self:GetStepPos(SIDE_LEFT,control),.1,5)
 		self:StepStart(SIDE_RIGHT,self:GetStepPos(SIDE_RIGHT,control),.1,5)
 	else
-		//I would fix this gud but I am running out of time FAST
-		//timer.Simple(.1,function()
-			//if not IsValid(self) then return end
-			//local ragdoll = self:GetRagdoll()
-			
-			
-			//print(">>",self:GetChar())
-
-			if self:GetController()==LocalPlayer() then
-				LocalPlayerController = self
-			end
-		//end)
+--		I would fix this gud but I am running out of time FAST
+--		timer.Simple(.1,function()
+--			if not IsValid(self) then return end
+--			local ragdoll = self:GetRagdoll()
+--
+--
+--			print(">>",self:GetChar())
+--
+--			if self:GetController()==LocalPlayer() then
+--				LocalPlayerController = self
+--			end
+--		end)
 	end
 end
 
@@ -157,7 +156,7 @@ local function doControl(phys,pos,ang)
 	shadow_data.pos = pos
 	shadow_data.angle = ang
 
-	if !ang then
+	if not ang then
 		shadow_data.maxangular = 0
 		phys:ComputeShadowControl(shadow_data)
 		shadow_data.maxangular = 1000
@@ -174,7 +173,7 @@ function ENT:PhysicsSimulate(phys_body,dt)
 
 	self:GetController():SetPos(self:GetPos())
 
-	//`debugoverlay.Cross(self:GetController():GetPos(), 10, 1,Color(255,255,0), false)
+	-- debugoverlay.Cross(self:GetController():GetPos(), 10, 1,Color(255,255,0), false)
 
 	local ragdoll = self:GetRagdoll()
 
@@ -195,9 +194,9 @@ function ENT:PhysicsSimulate(phys_body,dt)
 			local tr_l = util.TraceLine{start = phys_footl:GetPos(), endpos = phys_footl:GetPos()+Vector(0,0,-10), filter=ragdoll}
 			local tr_r = util.TraceLine{start = phys_footl:GetPos(), endpos = phys_footl:GetPos()+Vector(0,0,-10), filter=ragdoll}
 
-			//if tr_l.Hit and tr_r.Hit then
-				//self:StepStart(SIDE_LEFT,tr_l.HitPos,.1,5)
-				//self:StepStart(SIDE_RIGHT,tr_r.HitPos,.1,5)
+--			if tr_l.Hit and tr_r.Hit then
+--				self:StepStart(SIDE_LEFT,tr_l.HitPos,.1,5)
+--				self:StepStart(SIDE_RIGHT,tr_r.HitPos,.1,5)
 				local control = Vector()
 
 				self:StepStart(SIDE_LEFT,self:GetStepPos(SIDE_LEFT,control),.1,5)
@@ -206,7 +205,7 @@ function ENT:PhysicsSimulate(phys_body,dt)
 				if self.do_limp then
 					self.limp_timer=.5
 					self.do_limp=false
-					return //failed to stand up... notify user somehow?
+					return -- failed to stand up... notify user somehow?
 				end
 				self.limp_invuln = false
 				
@@ -215,11 +214,11 @@ function ENT:PhysicsSimulate(phys_body,dt)
 				self.ctrl_attack_2=nil
 
 				self.next_jump = CurTime()+1
-			/*else
-				self.limp_timer=1
-				print("cant get up")
-				return //failed to stand up... notify user somehow?
-			end*/
+--			else
+--				self.limp_timer=1
+--				print("cant get up")
+--				return -- failed to stand up... notify user somehow?
+--			end
 		end
 	end
 
@@ -236,7 +235,7 @@ function ENT:PhysicsSimulate(phys_body,dt)
 
 	shadow_data.deltatime = dt
 
-	if self:GetController():IsTyping() != self.type_sound:IsPlaying() then
+	if self:GetController():IsTyping() ~= self.type_sound:IsPlaying() then
 		if self:GetController():IsTyping() then
 			self.type_sound:Play()
 		else
@@ -295,7 +294,7 @@ function ENT:PhysicsSimulate(phys_body,dt)
 
 	
 
-	local foot_base = (phys_footl:GetPos()+phys_footr:GetPos())/2  //self.step_alt //(self.step_alt+self.step_goal)*.5
+	local foot_base = (phys_footl:GetPos()+phys_footr:GetPos())/2   -- self.step_alt //(self.step_alt+self.step_goal)*.5
 	foot_base.z = math.min(phys_footl:GetPos().z,phys_footr:GetPos().z)
 	foot_base = foot_base + self.lean
 
@@ -305,7 +304,7 @@ function ENT:PhysicsSimulate(phys_body,dt)
 	foot_base = foot_base + (self.duck and Vector(0,0,10) or Vector(0,0,30))
 
 	doControl(phys_body,foot_base,self.yaw+Angle(0,90,90))
-	doControl(phys_head,foot_base+Vector(0,0,40),self.yaw+Angle(-90,90,0)) //mid vec component = -n to lean fwd
+	doControl(phys_head,foot_base+Vector(0,0,40),self.yaw+Angle(-90,90,0)) -- mid vec component = -n to lean fwd
 
 
 	if self.step_wait then
@@ -398,7 +397,7 @@ function ENT:StepPoll()
 	if self.duck or self.blocking then control=control*.5 end
 
 	self.lean = control*10
-	//self.lean.x = self.lean.x*.5
+--	self.lean.x = self.lean.x*.5
 	self.lean:Rotate(self.yaw+Angle(0,90,0))
 
 	local pos_l = self.steps[SIDE_LEFT] and self.steps[SIDE_LEFT].goal or self:GetFootBone(SIDE_LEFT):GetPos()
@@ -418,10 +417,10 @@ function ENT:StepPoll()
 				self:StepStart(SIDE_RIGHT,self:GetStepPos(SIDE_RIGHT,control),.1,5)
 			end
 		elseif feet_close then
-			/*if left==0 then
-				self:StepStart(SIDE_LEFT,self:GetStepPos(SIDE_LEFT,control),.1,5)
-				self:StepStart(SIDE_RIGHT,self:GetStepPos(SIDE_RIGHT,control),.1,5)
-			end*/
+--			if left==0 then
+--				self:StepStart(SIDE_LEFT,self:GetStepPos(SIDE_LEFT,control),.1,5)
+--				self:StepStart(SIDE_RIGHT,self:GetStepPos(SIDE_RIGHT,control),.1,5)
+--			end
 
 			self:StepStart(left<0,self:GetStepPos(left<0,control),step_time,stride_height)
 		else
@@ -432,7 +431,7 @@ function ENT:StepPoll()
 		local front = pos_r.y-pos_l.y>0
 		local leader
 		if fwd>0 then
-			leader = !front
+			leader = not front
 		else
 			leader = front
 		end
@@ -445,7 +444,7 @@ function ENT:GetStepPos(side,control)
 	local ragdoll = self:GetRagdoll()
 
 	local foot_offset = side and Vector(-5) or Vector(5)
-	if control.y==0 and control.x!=0 then
+	if control.y==0 and control.x ~=0 then
 		foot_offset.y = side and -5 or 5
 	end
 
@@ -455,13 +454,13 @@ function ENT:GetStepPos(side,control)
 
 	local base_pos = ragdoll:GetPhysicsObject():GetPos() + foot_offset
 	
-	local end_pos = base_pos+Vector(0,0,-80) // ~30 to ground, then another 50
+	local end_pos = base_pos+Vector(0,0,-80) -- ~30 to ground, then another 50
 
 	local tr = util.TraceLine{start = base_pos, endpos = end_pos, filter=ragdoll}
 
 	if not tr.Hit or tr.StartSolid then
 		self.do_limp = true
-		//self:EmitSound("vo/npc/Barney/ba_ohshit03.wav")
+--		self:EmitSound("vo/npc/Barney/ba_ohshit03.wav")
 	end
 
 	return tr.HitPos
@@ -491,7 +490,7 @@ end
 
 -- note: self is the ragdoll :/
 function ENT:RagdollCollide(ragdoll,data)
-	//PrintTable(data)
+--	PrintTable(data)
 	if self.limp_timer>0 then
 		if not self.limp_invuln and math.random(10)==1 and data.Speed>10 then self:TryTakeEnergy(1) end
 	elseif not data.HitEntity:IsWorld() then
@@ -500,7 +499,7 @@ function ENT:RagdollCollide(ragdoll,data)
 			if v == data.PhysObject then hurt=true break end
 		end
 
-		//print(data.Speed)
+--		print(data.Speed)
 		if hurt and data.Speed>50 then
 			self:EmitSound("physics/flesh/flesh_impact_bullet1.wav",75,50,.5)
 			if self:ForceTakeEnergy(self.blocking and 2 or 6) then
@@ -511,29 +510,29 @@ function ENT:RagdollCollide(ragdoll,data)
 					ragdoll:GetPhysicsObjectNum(i-1):SetVelocity(punt_dir*punt_power)
 				end
 
-				//ragdoll:GetPhysicsObject():SetVelocity(punt_dir*punt_power)
+--				ragdoll:GetPhysicsObject():SetVelocity(punt_dir*punt_power)
 			end
 		end
 	end
 
-	//print(">>")
-	//PrintTable(data)
-	//print("<<")
-
-	//local d = math.max(data.HitObject:GetMass(),data.PhysObject:GetMass()) * (data.TheirOldVelocity - data.OurOldVelocity):Length()
-
-	//print(math.max(data.HitObject:GetMass(),data.PhysObject:GetMass()))
-	//print( (data.TheirOldVelocity - data.OurOldVelocity):Length() )
-
-	//local hurt = false
-	//for k,v in pairs(self.body_set) do
-	//	if v == data.PhysObject then hurt=true break end
-	//end
-
-	//if hurt then self:TryTakeEnergy(math.floor(d/3000)) end
-
-	//print(self.body_set[data.PhysObject])
-	//PrintTable(self.body_set)
+--	print(">>")
+--	PrintTable(data)
+--	print("<<")
+--
+--	local d = math.max(data.HitObject:GetMass(),data.PhysObject:GetMass()) * (data.TheirOldVelocity - data.OurOldVelocity):Length()
+--
+--	print(math.max(data.HitObject:GetMass(),data.PhysObject:GetMass()))
+--	print( (data.TheirOldVelocity - data.OurOldVelocity):Length() )
+--
+--	local hurt = false
+--	for k,v in pairs(self.body_set) do
+--		if v == data.PhysObject then hurt=true break end
+--	end
+--
+--	if hurt then self:TryTakeEnergy(math.floor(d/3000)) end
+--
+--	print(self.body_set[data.PhysObject])
+--	PrintTable(self.body_set)
 end
 
 function ENT:WinTaunt()
@@ -546,6 +545,6 @@ end
 
 function ENT:Draw()
 	if self:GetController():IsTyping() then
-		//self:DrawModel()
+--		self:DrawModel()
 	end
 end

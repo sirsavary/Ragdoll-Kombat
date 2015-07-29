@@ -82,7 +82,7 @@ local function round_end()
 			v.hasbrick=nil
 			if IsValid(v.controller) then
 				v.controller:Remove()
-				//resetView(v)
+--				resetView(v)
 			end
 		end
 		if #players>=2 then
@@ -127,7 +127,7 @@ function GM:KeyPress(ply, key)
 	end 
 end
 
-// No spawning allowed!
+-- No spawning allowed!
 function GM:PlayerSpawn(ply)
 	ply:KillSilent()
 	ply:Spectate(OBS_MODE_ROAMING)
@@ -170,7 +170,7 @@ function GM:Think()
 				ed:SetOrigin(ent:GetPos())
 				util.Effect("HelicopterMegaBomb",ed)
 
-				//EmitSound("", Vector position, number entity, number channel=CHAN_AUTO, number volume=1, number soundLevel=75, number soundFlags=0, number pitch=100 )
+--				EmitSound("", Vector position, number entity, number channel=CHAN_AUTO, number volume=1, number soundLevel=75, number soundFlags=0, number pitch=100 )
 				sound.Play("weapons/physcannon/energy_sing_explosion2.wav",ent:GetPos(),100,50,.5)
 
 				local ply = ent:GetController()
@@ -188,7 +188,7 @@ function GM:Think()
 		last_ko=CurTime()
 		gm_msg("This is getting boring! Spectators have been given bricks to throw at fighters!",Color(255,50,50))
 		for k,v in pairs(player.GetAll()) do
-			if !IsValid(v.controller) then
+			if not IsValid(v.controller) then
 				v.hasbrick=true
 			end		
 		end
@@ -208,7 +208,7 @@ function GM:ShowTeam(ply)
 end
 
 concommand.Add("ragcom_rocket",function(ply)
-	if IsValid(ply) and IsValid(ply.controller) and !ply.controller.rocketed then
+	if IsValid(ply) and IsValid(ply.controller) and not ply.controller.rocketed then
 		ply.controller.rocketed=true
 		ply.controller.limp_timer=100
 		ply.controller:EmitSound("npc/env_headcrabcanister/launch.wav")

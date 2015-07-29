@@ -148,7 +148,7 @@ wc_btn:SetPos(window_char:GetWide()/2-50,window_char:GetTall()-60)
 wc_btn:SetSize(100,50)
 wc_btn:SetText("Apply")
 wc_btn.DoClick = function()
-	//apply logic
+--	apply logic
 	window_char:Hide()
 	net.Start("ragcom_select_char")
 	net.WriteUInt(selected_n,8)
@@ -193,7 +193,7 @@ function GM:CalcView(ply,pos,ang,fov,near,far)
 		local tr = util.TraceLine{start=headpos,endpos=headpos+view.angles:Forward()*-120,filter=ragdoll}
 
 		view.origin = tr.HitPos + tr.HitNormal*10
-		//ply.last_view = view
+--		ply.last_view = view
 		return view
 	end
 end
@@ -246,7 +246,7 @@ function GM:HUDPaint()
 					ply_icon = LUNAR.getPlayerIcon(ply)
 				end
 
-				if !ply_icon and ply:IsAdmin() then
+				if not ply_icon and ply:IsAdmin() then
 					ply_icon= icon_admin
 				end
 
@@ -318,7 +318,7 @@ function GM:HUDDrawScoreBoard()
 				ply_icon = LUNAR.getPlayerIcon(ply)
 			end
 
-			if !ply_icon and ply:IsAdmin() then
+			if not ply_icon and ply:IsAdmin() then
 				ply_icon= icon_admin
 			end
 
@@ -349,11 +349,11 @@ function GM:OnPlayerChat(ply, text, bTeamOnly, bPlayerIsDead) --No *Dead* tags, 
 end
 
 function GM:InitPostEntity()
-	//PrintTable(Entity(0):GetMaterials())
+--	PrintTable(Entity(0):GetMaterials())
 
 	local colors_mappings = {
 		["gm_construct/flatgrass"]=Vector(.02,.08,0),
-		//["gm_construct/flatsign"]=Vector(0,0,0),
+--		["gm_construct/flatsign"]=Vector(0,0,0),
 		["brick/brickwall053d"]=Vector(.01,.01,.01), --Brick upper/lower border
 		["brick/brickwall003a_construct"]=Vector(.05,.05,.05),
 		["maps/gm_flatgrass/concrete/concretefloor028a_0_96_-12032"]=Vector(.2,.2,.2), --top
@@ -394,7 +394,7 @@ function GM:PlayerBindPress( ply, bind, pressed )
 end
 
 timer.Create("ragcom_afk_check",10,0,function()
-	if lastangles!=EyeAngles() then
+	if lastangles~=EyeAngles() then
 		lastangles = EyeAngles()
 		return
 	end
@@ -407,7 +407,7 @@ timer.Create("ragcom_afk_check",10,0,function()
 			RunConsoleCommand("say","I'm being moved to Spectator because I'm AFK!")
 			RunConsoleCommand("ragcom_rocket")
 		end
-	elseif !LocalPlayer():IsAdmin() then
+	elseif not LocalPlayer():IsAdmin() then
 		if lastbind+300<CurTime() then
 			RunConsoleCommand("say","I'm being removed from the game because I'm AFK!")
 			RunConsoleCommand("disconnect")
