@@ -1,13 +1,77 @@
-AddCSLuaFile("cl_init.lua")
-AddCSLuaFile("shared.lua")
+-- Adds network strings
+local function addNetworkStrings()
+	util.AddNetworkString("ragcom_msg")
+	util.AddNetworkString("ragcom_sound")
+	util.AddNetworkString("ragcom_gui")
+	util.AddNetworkString("ragcom_select_char")
+end
 
-include('shared.lua')
+-- Creates convars / settings
+local function createConvars()
+end
 
-util.AddNetworkString("ragcom_msg")
-util.AddNetworkString("ragcom_sound")
-util.AddNetworkString("ragcom_gui")
-util.AddNetworkString("ragcom_select_char")
+-- Sends files to the client
+local function sendClientFiles()
+	AddCSLuaFile("cl_init.lua")
+	AddCSLuaFile("shared.lua")
+end
 
+-- Loads files on the server
+local function includeFiles()
+	include('shared.lua')
+end
+
+local function addResources()
+	-- This block here will ensure that clients get workshop items
+	local ADDON_NAME_PREFIX = "ds_"
+	local ADDON_MIME_TYPE = ".gma"
+	local table = file.Find("addons/*", "MOD")
+	for k, v in pairs(table) do
+		if (file.IsDir("addons/" .. v, "MOD") == false) and (string.sub(v, 1, string.len(ADDON_NAME_PREFIX)) == ADDON_NAME_PREFIX) and (string.sub(v, -string.len(ADDON_MIME_TYPE)) == ADDON_MIME_TYPE) then
+			local addonID = string.sub(v, string.len(ADDON_NAME_PREFIX) + 1, -string.len(ADDON_MIME_TYPE))
+			print("Injecting workshop addon with ID " .. addonID)
+			resource.AddWorkshop(addonID)
+		end
+	end
+
+	local function addEntireFolder(folder)
+		print("Adding folder " .. folder)
+		local files, directories = file.Find(folder .. "/*", "GAME")
+
+		-- Add all files
+		for k, v in pairs(files) do
+			local item = folder .. "/" .. v
+			print("Adding single file: " .. v)
+			resource.AddSingleFile(item)
+			--TODO pull this material creating stuff out into a separate function
+			if (string.sub(item, 1, string.len(".png")) == ".png") then
+				local m = Material(item)
+				if CLIENT then
+					print("ragdoll_kombat_" .. k)
+					CreateMaterial("ragdoll_kombat_" .. k, "VertexLitGeneric", { ["$basetexture"] = item })
+				end
+			end
+		end
+
+		-- Add all subdirectories
+		for k, v in pairs(directories) do
+			local item = folder .. "/" .. v
+			addEntireFolder(item)
+		end
+	end
+
+	addEntireFolder("materials/ragdoll_kombat")
+	addEntireFolder("sound/ragdoll_kombat")
+end
+
+print("Starting Ragdoll Kombat...")
+addNetworkStrings()
+createConvars()
+addResources()
+sendClientFiles()
+includeFiles()
+
+--TODO refactor ALL of this
 net.Receive("ragcom_select_char", function(_, ply)
 	local n = net.ReadUInt(8)
 	ply.char = n
@@ -52,7 +116,7 @@ end
 local function get_non_spectators()
 	local t = {}
 	for _, ply in pairs(player.GetAll()) do
-		if RAGCOM_CHARS[ply.char] then
+		if RagdollKombat.characters[ply.char] then
 			table.insert(t, ply)
 		end
 	end
@@ -96,7 +160,7 @@ end
 
 function GM:PlayerInitialSpawn(ply)
 	if ply:IsBot() then
-		ply.char = math.random(#RAGCOM_CHARS)
+		ply.char = math.random(#RagdollKombat.characters)
 	else
 		ply.char = 0
 	end

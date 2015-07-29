@@ -122,7 +122,7 @@ wc_select:SetSize(window_char:GetWide() / 2 - 50, window_char:GetTall() / 2 - 50
 
 wc_select:AddColumn("Character")
 wc_select:AddLine("None [Spectate]")
-for k, v in pairs(RAGCOM_CHARS) do
+for k, v in pairs(RagdollKombat.characters) do
 	wc_select:AddLine(v.name)
 end
 
@@ -134,10 +134,11 @@ function wc_select:OnRowSelected(n)
 		setInfo("")
 		wc_model:SetModel("")
 	else
-		setInfo("<b>Bio:</b> " .. RAGCOM_CHARS[n].desc .. "<hr><blockquote><i>" .. string.Replace(RAGCOM_CHARS[n].quote, "\n", "<br>") .. "</i></blockquote>-- Dick Valentine")
-		wc_model:SetModel(RAGCOM_CHARS[n].model)
+		setInfo("<b>Bio:</b> " .. RagdollKombat.characters[n].desc .. "<hr><blockquote><i>" .. string.Replace(RagdollKombat.characters[n].quote, "\n", "<br>") .. "</i></blockquote>-- Dick Valentine")
+		wc_model:SetModel(RagdollKombat.characters[n].model)
 		local ent = wc_model:GetEntity()
-		RAGCOM_CHARS[n].setup(ent)
+		--TODO modularize this
+		RagdollKombat.characters[n].setup(ent)
 	end
 end
 
